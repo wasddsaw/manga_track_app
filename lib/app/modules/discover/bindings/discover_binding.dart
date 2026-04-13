@@ -6,7 +6,7 @@ class DiscoverBinding extends Bindings {
   @override
   void dependencies() {
     Get.lazyPut<DiscoverController>(
-      () => DiscoverController(),
+      () => DiscoverController(mangaRepository: Get.find()),
     );
   }
 }
