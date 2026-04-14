@@ -7,4 +7,4 @@ import 'package:manga_track_app/app/services/utils/global_style.dart';
 
 part 'app_theme.dart';
 part 'overlay_utils.dart';
-// part 'global_function.dart';
+part 'app_color.dart';

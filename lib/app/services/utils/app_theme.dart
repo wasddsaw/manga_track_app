@@ -4,8 +4,9 @@ ThemeData appTheme() {
   return ThemeData(
     useMaterial3: false,
     fontFamily: GoogleFonts.inter().toString(),
-    // scaffoldBackgroundColor: AppColors.textSecondary,
+    scaffoldBackgroundColor: AppColors.background,
 
+    // scaffoldBackgroundColor: AppColors.textSecondary,
     // highlightColor: Colors.transparent,
     // splashColor: Colors.transparent,
 
