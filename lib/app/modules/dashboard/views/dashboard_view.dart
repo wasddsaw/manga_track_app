@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:manga_track_app/app/modules/browse/controllers/browse_controller.dart';
 
 import '../../../services/utils/global_style.dart';
 import '../controllers/dashboard_controller.dart';
@@ -29,6 +30,11 @@ class DashboardView extends GetView<DashboardController> {
               items: controller.bottomNavBarItem,
               onTap: (index) {
                 controller.activeBottomNavBarIndex.value = index;
+                if (index == 2) {
+                  Get.log('test $index');
+                  Get.put(BrowseController());
+                  Get.find<BrowseController>().onReload();
+                }
               },
             ),
           ),

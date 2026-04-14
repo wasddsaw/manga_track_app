@@ -33,6 +33,7 @@ class DiscoverController extends GetxController {
   int page = 1;
   bool isLoadingMore = false;
   bool hasMore = true;
+  bool isError = false;
 
   int totalFetched = 0;
   int maxTotal = 60;
@@ -127,14 +128,26 @@ class DiscoverController extends GetxController {
         hasMore = false;
       }
     } catch (e) {
-      if (e is dio.Response) {
-        OverlayUtils.showSnackbar(message: e.data['message']);
+      isError = true;
+
+      if (e is dio.DioException) {
+        final statusCode = e.response?.statusCode;
+
+        OverlayUtils.closeLoading();
+
+        if (statusCode == 504) {
+          OverlayUtils.showSnackbar(message: "Server timeout. Please try again.");
+        } else {
+          OverlayUtils.showSnackbar(message: e.response?.data?['message'] ?? "Request failed");
+        }
       } else {
         OverlayUtils.showWarningDialog('Unexpected error', '$e', () => Get.back());
       }
+
+      return;
     } finally {
       isLoadingMore = false;
-      OverlayUtils.closeLoading();
+      if (!isError) OverlayUtils.closeLoading();
       update();
     }
   }
