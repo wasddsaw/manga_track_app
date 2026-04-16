@@ -81,24 +81,12 @@ class FavouriteView extends GetView<DiscoverController> {
                               leading: image.isNotEmpty
                                   ? ClipRRect(
                                       borderRadius: BorderRadius.circular(8),
-                                      child: Image.network(
-                                        image,
-                                        width: 60,
-                                        height: 80,
-                                        fit: BoxFit.cover,
-                                      ),
+                                      child: Image.network(image, width: 60, height: 80, fit: BoxFit.cover),
                                     )
                                   : const Icon(Icons.image, size: 40),
-                              title: Text(
-                                title,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
+                              title: Text(title, maxLines: 2, overflow: TextOverflow.ellipsis),
                               trailing: IconButton(
-                                icon: const Icon(
-                                  Icons.delete,
-                                  color: Colors.red,
-                                ),
+                                icon: const Icon(Icons.delete, color: Colors.red),
                                 onPressed: () {
                                   discoverController.toggleFavourite(id);
                                 },

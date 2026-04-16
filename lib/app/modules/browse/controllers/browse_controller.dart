@@ -5,12 +5,20 @@ import 'package:manga_track_app/app/modules/discover/controllers/discover_contro
 class BrowseController extends GetxController {
   final ScrollController scrollController = ScrollController();
 
-  RxInt activeGenreIndex = 0.obs;
+  // RxInt activeGenreIndex = 0.obs;
 
-  final Map<String, GlobalKey> sectionKeys = {};
+  int activeGenreIndex = 0;
+
+  Map<String, GlobalKey> sectionKeys = {};
 
   RxList<String> genres = <String>[].obs;
   Map<String, List<dynamic>> grouped = {};
+
+  @override
+  void onInit() {
+    scrollController.addListener(_onScroll);
+    super.onInit();
+  }
 
   Future<void> onReload() async {
     Get.log('BrowseController onReload called');
@@ -20,6 +28,7 @@ class BrowseController extends GetxController {
 
   void initData(List<dynamic> mangaList) {
     Get.log('initData called with mangaList length: ${mangaList.length}');
+
     final Map<String, List<dynamic>> temp = {};
 
     for (var manga in mangaList) {
@@ -34,16 +43,38 @@ class BrowseController extends GetxController {
     }
 
     grouped = temp..removeWhere((key, value) => value.isEmpty);
+
     genres.value = grouped.keys.toList();
 
-    sectionKeys.clear();
-
-    for (var genre in genres) {
-      sectionKeys[genre] = GlobalKey();
-    }
-
-    scrollController.addListener(_onScroll);
+    sectionKeys = {for (final g in genres) g: GlobalKey()};
   }
+
+  // void initData(List<dynamic> mangaList) {
+  //   Get.log('initData called with mangaList length: ${mangaList.length}');
+  //   final Map<String, List<dynamic>> temp = {};
+
+  //   for (var manga in mangaList) {
+  //     final genres = manga['genres'] as List;
+
+  //     for (var genre in genres) {
+  //       final genreName = genre['name'];
+
+  //       temp.putIfAbsent(genreName, () => []);
+  //       temp[genreName]!.add(manga);
+  //     }
+  //   }
+
+  //   grouped = temp..removeWhere((key, value) => value.isEmpty);
+  //   genres.value = grouped.keys.toList();
+
+  //   sectionKeys.clear();
+
+  //   for (var genre in genres) {
+  //     sectionKeys[genre] = GlobalKey();
+  //   }
+
+  //   scrollController.addListener(_onScroll);
+  // }
 
   void scrollToGenre(int index) {
     if (index < 0 || index >= genres.length) {
@@ -51,15 +82,13 @@ class BrowseController extends GetxController {
       return;
     }
 
-    if (activeGenreIndex.value == index) {
+    if (activeGenreIndex == index) {
       Get.log('Same index tapped, ignore scroll');
       return;
     }
 
     final genre = genres[index];
     final key = sectionKeys[genre];
-
-    Get.log('Scrolling to genre: $genre at index: $index');
 
     final context = key?.currentContext;
     if (context == null) {
@@ -71,10 +100,11 @@ class BrowseController extends GetxController {
       context,
       duration: const Duration(milliseconds: 400),
       curve: Curves.easeInOut,
-      alignment: 0.0, // top alignment
+      alignment: 0.0,
     );
 
-    activeGenreIndex.value = index;
+    activeGenreIndex = index;
+    update();
   }
 
   void _onScroll() {
@@ -87,7 +117,8 @@ class BrowseController extends GetxController {
         final position = box.localToGlobal(Offset.zero);
 
         if (position.dy <= 150 && position.dy >= 0) {
-          activeGenreIndex.value = i;
+          activeGenreIndex = i;
+          update();
           break;
         }
       }

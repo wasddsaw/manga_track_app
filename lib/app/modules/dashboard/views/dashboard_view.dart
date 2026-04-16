@@ -19,7 +19,7 @@ class DashboardView extends GetView<DashboardController> {
           child: SizedBox(
             height: Get.width * 0.16,
             child: BottomNavigationBar(
-              backgroundColor: AppColors.background,
+              backgroundColor: AppColors.background3.withValues(alpha: 0.8),
               selectedFontSize: gFontSize * 0.8,
               selectedItemColor: AppColors.primary2,
               selectedLabelStyle: TextStyle(fontWeight: FontWeight.w600, height: Get.width * 0.006),
